@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roda de Mentes - Chat Interativo</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+
+    <!-- Auth Screen -->
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <i class="fas fa-brain"></i>
+                <h1>Roda de Mentes</h1>
+                <p>Sistema Multi-Persona de IA Colaborativa</p>
+            </div>
+            <div class="auth-form">
+                <input type="password" id="auth-input" placeholder="Digite a senha de acesso (9091)" maxlength="4">
+                <button id="auth-submit" class="btn-primary">
+                    <i class="fas fa-unlock"></i> Acessar
+                </button>
+                <div id="auth-error" class="auth-error"></div>
+            </div>
+            <div class="auth-footer">
+                <p>Bem-vindo à experiência de mentoria definitiva</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Chat Interface -->
+    <div id="main-app" class="main-app hidden">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <h3>Você</h3>
+                        <span class="status online">Online</span>
+                    </div>
+                </div>
+                <div class="sidebar-actions">
+                    <button class="icon-btn" id="new-chat-btn" title="Nova Conversa">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="icon-btn" id="theme-toggle" title="Alternar Tema">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="icon-btn" id="settings-btn" title="Configurações">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Buscar conversas...">
+            </div>
+
+            <div class="quick-commands">
+                <h4>Comandos Rápidos</h4>
+                <div class="command-chips">
+                    <button class="chip" data-command="/invocar">
+                        <i class="fas fa-user-plus"></i> Invocar Mente
+                    </button>
+                    <button class="chip" data-command="/mesa">
+                        <i class="fas fa-users"></i> Mesa Redonda
+                    </button>
+                    <button class="chip" data-command="/debate">
+                        <i class="fas fa-balance-scale"></i> Debate
+                    </button>
+                    <button class="chip" data-command="/auto">
+                        <i class="fas fa-magic"></i> Auto-Seleção
+                    </button>
+                    <button class="chip" data-command="/doug">
+                        <i class="fas fa-fire"></i> Doug Original
+                    </button>
+                    <button class="chip" data-command="/mentes">
+                        <i class="fas fa-brain"></i> Ver Mentes
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-list" id="chat-list">
+                <h4>Conversas</h4>
+                <div class="chat-item active" data-chat-id="main">
+                    <div class="chat-avatar group-avatar">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="chat-info">
+                        <h4>Roda de Mentes</h4>
+                        <p class="last-message">Bem-vindo ao sistema!</p>
+                    </div>
+                    <div class="chat-meta">
+                        <span class="time">Agora</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="active-minds-panel">
+                <h4>Mentes Ativas</h4>
+                <div id="active-minds-list" class="active-minds-list">
+                    <div class="active-mind facilitator">
+                        <div class="mind-avatar doug-avatar">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="mind-info">
+                            <span class="mind-name">Doug</span>
+                            <span class="mind-role">Facilitador</span>
+                        </div>
+                        <span class="status-dot online"></span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-container">
+
+            <!-- Chat Header -->
+            <header class="chat-header">
+                <button class="icon-btn mobile-menu-toggle" id="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="chat-header-info">
+                    <div class="chat-header-avatar">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="chat-header-text">
+                        <h2 id="chat-title">Roda de Mentes</h2>
+                        <p id="chat-subtitle">Sistema Multi-Persona Ativo</p>
+                    </div>
+                </div>
+                <div class="chat-header-actions">
+                    <button class="icon-btn" id="round-table-view-btn" title="Visualização Mesa Redonda">
+                        <i class="fas fa-users-viewfinder"></i>
+                    </button>
+                    <button class="icon-btn" id="export-chat-btn" title="Exportar Conversa">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="icon-btn" id="info-btn" title="Informações">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Messages Area -->
+            <div class="messages-container" id="messages-container">
+                <div class="welcome-message">
+                    <div class="welcome-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h2>Bem-vindo à Roda de Mentes</h2>
+                    <p>Sistema Multi-Persona de IA Colaborativa</p>
+                    <div class="welcome-features">
+                        <div class="feature">
+                            <i class="fas fa-users"></i>
+                            <span>19 Mentes Especializadas</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-comments"></i>
+                            <span>Mesa Redonda & Debates</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-magic"></i>
+                            <span>Seleção Automática Inteligente</span>
+                        </div>
+                    </div>
+                    <p class="welcome-cta">Comece digitando um comando ou sua pergunta abaixo</p>
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator hidden" id="typing-indicator">
+                <div class="typing-avatar">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="typing-bubble">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span class="typing-text">Doug está digitando...</span>
+                </div>
+            </div>
+
+            <!-- Message Input Area -->
+            <div class="message-input-container">
+                <div class="autocomplete-suggestions hidden" id="autocomplete-suggestions"></div>
+
+                <div class="message-input-wrapper">
+                    <button class="icon-btn" id="attach-btn" title="Anexar">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+
+                    <div class="input-with-formatting">
+                        <div contenteditable="true"
+                             class="message-input"
+                             id="message-input"
+                             data-placeholder="Digite sua mensagem ou comando..."></div>
+
+                        <div class="formatting-toolbar hidden">
+                            <button class="format-btn" data-format="bold" title="Negrito">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button class="format-btn" data-format="italic" title="Itálico">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button class="format-btn" data-format="code" title="Código">
+                                <i class="fas fa-code"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="icon-btn" id="emoji-btn" title="Emoji">
+                        <i class="fas fa-face-smile"></i>
+                    </button>
+
+                    <button class="icon-btn send-btn" id="send-btn" title="Enviar">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+
+                <div class="quick-actions">
+                    <button class="quick-action-btn" data-action="voice">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="quick-action-btn" data-action="gif">
+                        <i class="fas fa-gif"></i>
+                    </button>
+                    <button class="quick-action-btn" data-action="poll">
+                        <i class="fas fa-poll"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Panel (Info/Details) -->
+        <aside class="right-panel hidden" id="right-panel">
+            <div class="panel-header">
+                <h3>Detalhes da Conversa</h3>
+                <button class="icon-btn" id="close-panel-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="panel-content">
+                <div class="panel-section">
+                    <h4>Mentes Disponíveis</h4>
+                    <div id="minds-grid" class="minds-grid"></div>
+                </div>
+
+                <div class="panel-section">
+                    <h4>Estatísticas</h4>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <i class="fas fa-message"></i>
+                            <div>
+                                <span class="stat-value" id="total-messages">0</span>
+                                <span class="stat-label">Mensagens</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-brain"></i>
+                            <div>
+                                <span class="stat-value" id="minds-consulted">1</span>
+                                <span class="stat-label">Mentes Consultadas</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h4>Ações Rápidas</h4>
+                    <button class="panel-action-btn">
+                        <i class="fas fa-star"></i>
+                        Mensagens Favoritas
+                    </button>
+                    <button class="panel-action-btn">
+                        <i class="fas fa-image"></i>
+                        Mídia & Links
+                    </button>
+                    <button class="panel-action-btn">
+                        <i class="fas fa-thumbtack"></i>
+                        Mensagens Fixadas
+                    </button>
+                    <button class="panel-action-btn">
+                        <i class="fas fa-chart-line"></i>
+                        Timeline de Insights
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Round Table Visualization Modal -->
+        <div class="modal hidden" id="round-table-modal">
+            <div class="modal-overlay" id="modal-overlay"></div>
+            <div class="modal-content round-table-content">
+                <button class="modal-close" id="close-round-table">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2>Mesa Redonda - Visualização</h2>
+                <div class="round-table-stage">
+                    <div class="table-center">
+                        <div class="doug-facilitator-center">
+                            <i class="fas fa-fire"></i>
+                            <span>Doug</span>
+                            <p>Facilitador</p>
+                        </div>
+                    </div>
+                    <div class="minds-circle" id="minds-circle">
+                        <!-- Minds will be dynamically added here -->
+                    </div>
+                </div>
+                <div class="round-table-chat" id="round-table-chat">
+                    <!-- Round table messages -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Minds Library Modal -->
+        <div class="modal hidden" id="minds-modal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content minds-library-content">
+                <button class="modal-close" id="close-minds-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2>Biblioteca de Mentes</h2>
+                <div class="minds-categories" id="minds-categories">
+                    <!-- Categories will be populated by JS -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Audio Elements for Notifications -->
+    <audio id="notification-sound" preload="auto">
+        <source src="assets/sounds/notification.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="send-sound" preload="auto">
+        <source src="assets/sounds/send.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="assets/js/minds-data.js"></script>
+    <script src="assets/js/app.js"></script>
+
+</body>
+</html>
