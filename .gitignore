@@ -27,6 +27,11 @@ Temporary Items
 .env.local
 .env.*.local
 
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
 # Logs
 logs
 *.log
