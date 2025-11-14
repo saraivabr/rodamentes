@@ -1,72 +1,176 @@
 #!/bin/bash
 
 # =====================================================
-# RODA DE MENTES - SCRIPT DE VALIDAÇÃO COMPLETA
+# RODA DE MENTES - SCRIPT DE VALIDAÇÃO COMPLETA v2.0
 # Valida todos os aspectos críticos do projeto
+# Best Practices 2024/2025
 # =====================================================
+
+# Strict mode - Best Practice 2024/2025
+set -euo pipefail
+
+# Trap errors and provide context
+trap 'echo -e "${RED}✗ Erro na linha $LINENO: $BASH_COMMAND${NC}" >&2' ERR
 
 # Cores para output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 BOLD='\033[1m'
+
+# Configurações
+JSON_OUTPUT=false
+VERBOSE=false
+START_TIME=$(date +%s)
 
 # Contadores
 TOTAL_CHECKS=0
 PASSED_CHECKS=0
 FAILED_CHECKS=0
 WARNING_CHECKS=0
+CRITICAL_ERRORS=0
 
 # Arrays para armazenar problemas
 declare -a ERRORS
 declare -a WARNINGS
 declare -a SUCCESS
+declare -a CRITICAL
+
+# Função de ajuda
+show_help() {
+    cat << EOF
+🧠 RODA DE MENTES - VALIDAÇÃO COMPLETA v2.0
+
+Uso: $0 [OPTIONS]
+
+Opções:
+    -h, --help          Mostra esta mensagem de ajuda
+    -j, --json          Saída em formato JSON (útil para CI/CD)
+    -v, --verbose       Modo verboso com mais detalhes
+    --lighthouse        Executa auditoria Lighthouse (requer npx)
+    --shellcheck        Valida sintaxe com ShellCheck
+    --ci                Modo CI/CD (sem cores, JSON output)
+
+Exemplos:
+    ./validate.sh                    # Validação padrão
+    ./validate.sh --json             # Output JSON
+    ./validate.sh --lighthouse       # Com auditoria Lighthouse
+    ./validate.sh --ci               # Para CI/CD pipelines
+
+EOF
+    exit 0
+}
+
+# Parse argumentos
+LIGHTHOUSE_CHECK=false
+SHELLCHECK_ENABLE=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help) show_help ;;
+        -j|--json) JSON_OUTPUT=true ;;
+        -v|--verbose) VERBOSE=true ;;
+        --lighthouse) LIGHTHOUSE_CHECK=true ;;
+        --shellcheck) SHELLCHECK_ENABLE=true ;;
+        --ci) JSON_OUTPUT=true; RED=''; GREEN=''; YELLOW=''; BLUE=''; NC=''; BOLD='' ;;
+        *) echo "Opção desconhecida: $1"; show_help ;;
+    esac
+    shift
+done
+
+# Função para timestamp
+timestamp() {
+    date +"%Y-%m-%d %H:%M:%S"
+}
+
+# Função para log verboso
+log_verbose() {
+    if [ "$VERBOSE" = true ]; then
+        echo -e "${CYAN}[$(timestamp)]${NC} $1"
+    fi
+}
 
 # Função para printar header
 print_header() {
-    echo ""
-    echo -e "${BLUE}${BOLD}=================================================${NC}"
-    echo -e "${BLUE}${BOLD}  🧠 RODA DE MENTES - VALIDAÇÃO COMPLETA${NC}"
-    echo -e "${BLUE}${BOLD}=================================================${NC}"
-    echo ""
+    if [ "$JSON_OUTPUT" = false ]; then
+        echo ""
+        echo -e "${BLUE}${BOLD}=================================================${NC}"
+        echo -e "${BLUE}${BOLD}  🧠 RODA DE MENTES - VALIDAÇÃO v2.0${NC}"
+        echo -e "${BLUE}${BOLD}  Início: $(timestamp)${NC}"
+        echo -e "${BLUE}${BOLD}=================================================${NC}"
+        echo ""
+    fi
 }
 
 # Função para printar seção
 print_section() {
-    echo ""
-    echo -e "${BOLD}📋 $1${NC}"
-    echo "---------------------------------------------------"
+    if [ "$JSON_OUTPUT" = false ]; then
+        echo ""
+        echo -e "${BOLD}📋 $1${NC}"
+        echo "---------------------------------------------------"
+    fi
 }
 
 # Função para check
 check() {
-    ((TOTAL_CHECKS++))
-    if [ $1 -eq 0 ]; then
-        ((PASSED_CHECKS++))
-        echo -e "${GREEN}✓${NC} $2"
-        SUCCESS+=("$2")
+    local status=$1
+    local message=$2
+    local critical=${3:-false}
+
+    ((TOTAL_CHECKS++)) || true
+
+    if [ $status -eq 0 ]; then
+        ((PASSED_CHECKS++)) || true
+        [ "$JSON_OUTPUT" = false ] && echo -e "${GREEN}✓${NC} $message"
+        SUCCESS+=("$message")
+        log_verbose "PASS: $message"
         return 0
     else
-        ((FAILED_CHECKS++))
-        echo -e "${RED}✗${NC} $2"
-        ERRORS+=("$2")
+        ((FAILED_CHECKS++)) || true
+        [ "$JSON_OUTPUT" = false ] && echo -e "${RED}✗${NC} $message"
+        ERRORS+=("$message")
+
+        if [ "$critical" = true ]; then
+            ((CRITICAL_ERRORS++)) || true
+            CRITICAL+=("$message")
+            [ "$JSON_OUTPUT" = false ] && echo -e "${RED}${BOLD}  ⚠ CRÍTICO!${NC}"
+        fi
+
+        log_verbose "FAIL: $message (critical: $critical)"
         return 1
     fi
 }
 
 # Função para warning
 warn() {
-    ((TOTAL_CHECKS++))
-    ((WARNING_CHECKS++))
-    echo -e "${YELLOW}⚠${NC} $1"
-    WARNINGS+=("$1")
+    local message=$1
+    ((TOTAL_CHECKS++)) || true
+    ((WARNING_CHECKS++)) || true
+    [ "$JSON_OUTPUT" = false ] && echo -e "${YELLOW}⚠${NC} $message"
+    WARNINGS+=("$message")
+    log_verbose "WARN: $message"
 }
 
 # Função para info
 info() {
-    echo -e "${BLUE}ℹ${NC} $1"
+    [ "$JSON_OUTPUT" = false ] && echo -e "${BLUE}ℹ${NC} $1"
+    log_verbose "INFO: $1"
+}
+
+# Função para critical error
+critical() {
+    local message=$1
+    ((TOTAL_CHECKS++)) || true
+    ((FAILED_CHECKS++)) || true
+    ((CRITICAL_ERRORS++)) || true
+    [ "$JSON_OUTPUT" = false ] && echo -e "${RED}${BOLD}✗✗✗ CRÍTICO:${NC} $message"
+    ERRORS+=("$message")
+    CRITICAL+=("$message")
+    log_verbose "CRITICAL: $message"
 }
 
 # =====================================================
@@ -534,6 +638,198 @@ validate_documentation() {
 }
 
 # =====================================================
+# 11. VALIDAÇÃO COM SHELLCHECK (OPCIONAL)
+# =====================================================
+validate_shellcheck() {
+    print_section "11. ShellCheck - Análise Estática"
+
+    if [ "$SHELLCHECK_ENABLE" = false ]; then
+        info "ShellCheck desabilitado. Use --shellcheck para ativar"
+        return 0
+    fi
+
+    if ! command -v shellcheck &> /dev/null; then
+        warn "ShellCheck não instalado. Instale com: apt install shellcheck"
+        return 1
+    fi
+
+    info "Executando ShellCheck em scripts shell..."
+
+    # Verificar este próprio script
+    if shellcheck validate.sh 2>/dev/null; then
+        check 0 "validate.sh passou na análise ShellCheck"
+    else
+        warn "validate.sh tem avisos do ShellCheck (não crítico)"
+    fi
+
+    # Verificar outros scripts se existirem
+    if [ -d "scripts" ]; then
+        SCRIPT_COUNT=0
+        SCRIPT_PASS=0
+
+        for script in scripts/*.sh; do
+            if [ -f "$script" ]; then
+                ((SCRIPT_COUNT++)) || true
+                if shellcheck "$script" 2>/dev/null; then
+                    ((SCRIPT_PASS++)) || true
+                fi
+            fi
+        done
+
+        if [ $SCRIPT_COUNT -gt 0 ]; then
+            info "Scripts analisados: $SCRIPT_PASS/$SCRIPT_COUNT passaram"
+            if [ $SCRIPT_PASS -eq $SCRIPT_COUNT ]; then
+                check 0 "Todos os scripts em scripts/ passaram no ShellCheck"
+            else
+                warn "Alguns scripts em scripts/ têm avisos do ShellCheck"
+            fi
+        fi
+    fi
+}
+
+# =====================================================
+# 12. VALIDAÇÃO COM LIGHTHOUSE (OPCIONAL)
+# =====================================================
+validate_lighthouse() {
+    print_section "12. Lighthouse - Auditoria PWA"
+
+    if [ "$LIGHTHOUSE_CHECK" = false ]; then
+        info "Lighthouse desabilitado. Use --lighthouse para ativar"
+        return 0
+    fi
+
+    if ! command -v npx &> /dev/null; then
+        warn "npx não instalado. Lighthouse requer Node.js/npm"
+        return 1
+    fi
+
+    info "Executando auditoria Lighthouse (pode levar alguns minutos)..."
+
+    # Verificar se há um servidor HTTP local rodando
+    if ! command -v python3 &> /dev/null && ! command -v php &> /dev/null; then
+        warn "Python3 ou PHP necessários para servidor HTTP local"
+        info "Instale com: apt install python3"
+        return 1
+    fi
+
+    # Iniciar servidor temporário
+    if command -v python3 &> /dev/null; then
+        python3 -m http.server 8080 &>/dev/null &
+        SERVER_PID=$!
+        info "Servidor HTTP iniciado na porta 8080 (PID: $SERVER_PID)"
+        sleep 2
+
+        # Executar Lighthouse
+        if npx lighthouse http://localhost:8080 --quiet --chrome-flags="--headless" --output=json --output-path=./lighthouse-report.json 2>/dev/null; then
+
+            # Parse do report JSON
+            if [ -f "lighthouse-report.json" ]; then
+                PWA_SCORE=$(grep -o '"pwa":[0-9.]*' lighthouse-report.json | grep -o '[0-9.]*' | head -1)
+                PERFORMANCE_SCORE=$(grep -o '"performance":[0-9.]*' lighthouse-report.json | grep -o '[0-9.]*' | head -1)
+                ACCESSIBILITY_SCORE=$(grep -o '"accessibility":[0-9.]*' lighthouse-report.json | grep -o '[0-9.]*' | head -1)
+
+                if [ -n "$PWA_SCORE" ]; then
+                    PWA_PERCENT=$(echo "$PWA_SCORE * 100" | bc 2>/dev/null || echo "0")
+                    info "Score PWA: ${PWA_PERCENT}%"
+
+                    if (( $(echo "$PWA_SCORE >= 0.9" | bc -l 2>/dev/null || echo "0") )); then
+                        check 0 "Lighthouse PWA Score: ${PWA_PERCENT}% (Excelente)"
+                    elif (( $(echo "$PWA_SCORE >= 0.7" | bc -l 2>/dev/null || echo "0") )); then
+                        warn "Lighthouse PWA Score: ${PWA_PERCENT}% (Melhorar)"
+                    else
+                        check 1 "Lighthouse PWA Score: ${PWA_PERCENT}% (Crítico)"
+                    fi
+                fi
+
+                if [ -n "$PERFORMANCE_SCORE" ]; then
+                    PERF_PERCENT=$(echo "$PERFORMANCE_SCORE * 100" | bc 2>/dev/null || echo "0")
+                    info "Score Performance: ${PERF_PERCENT}%"
+                fi
+
+                if [ -n "$ACCESSIBILITY_SCORE" ]; then
+                    A11Y_PERCENT=$(echo "$ACCESSIBILITY_SCORE * 100" | bc 2>/dev/null || echo "0")
+                    info "Score Acessibilidade: ${A11Y_PERCENT}%"
+                fi
+
+                # Limpar report
+                rm -f lighthouse-report.json
+            else
+                warn "Não foi possível gerar relatório Lighthouse"
+            fi
+        else
+            warn "Lighthouse falhou ao executar auditoria"
+        fi
+
+        # Parar servidor
+        kill $SERVER_PID 2>/dev/null || true
+        info "Servidor HTTP encerrado"
+    fi
+}
+
+# =====================================================
+# GERADOR DE OUTPUT JSON
+# =====================================================
+generate_json_output() {
+    local end_time=$(date +%s)
+    local duration=$((end_time - START_TIME))
+
+    cat << EOF
+{
+  "timestamp": "$(date -Iseconds)",
+  "duration_seconds": $duration,
+  "summary": {
+    "total_checks": $TOTAL_CHECKS,
+    "passed": $PASSED_CHECKS,
+    "failed": $FAILED_CHECKS,
+    "warnings": $WARNING_CHECKS,
+    "critical": $CRITICAL_ERRORS,
+    "success_rate": $((PASSED_CHECKS * 100 / TOTAL_CHECKS))
+  },
+  "errors": [
+EOF
+
+    local first=true
+    for error in "${ERRORS[@]+"${ERRORS[@]}"}"; do
+        [ "$first" = false ] && echo ","
+        echo -n "    \"$error\""
+        first=false
+    done
+
+    cat << EOF
+
+  ],
+  "warnings": [
+EOF
+
+    first=true
+    for warning in "${WARNINGS[@]+"${WARNINGS[@]}"}"; do
+        [ "$first" = false ] && echo ","
+        echo -n "    \"$warning\""
+        first=false
+    done
+
+    cat << EOF
+
+  ],
+  "critical": [
+EOF
+
+    first=true
+    for crit in "${CRITICAL[@]+"${CRITICAL[@]}"}"; do
+        [ "$first" = false ] && echo ","
+        echo -n "    \"$crit\""
+        first=false
+    done
+
+    cat << EOF
+
+  ],
+  "status": "$( [ $FAILED_CHECKS -eq 0 ] && echo "success" || echo "failure" )"
+}
+EOF
+}
+
+# =====================================================
 # EXECUTAR TODAS AS VALIDAÇÕES
 # =====================================================
 main() {
@@ -550,67 +846,85 @@ main() {
     validate_performance
     validate_documentation
 
+    # Validações opcionais
+    validate_shellcheck
+    validate_lighthouse
+
     # =====================================================
     # RELATÓRIO FINAL
     # =====================================================
-    print_section "📊 RELATÓRIO FINAL"
+    if [ "$JSON_OUTPUT" = false ]; then
+        print_section "📊 RELATÓRIO FINAL"
 
-    echo ""
-    echo -e "${BOLD}Total de verificações:${NC} $TOTAL_CHECKS"
-    echo -e "${GREEN}✓ Passou:${NC} $PASSED_CHECKS"
-    echo -e "${RED}✗ Falhou:${NC} $FAILED_CHECKS"
-    echo -e "${YELLOW}⚠ Avisos:${NC} $WARNING_CHECKS"
-    echo ""
-
-    # Calcular percentual de sucesso
-    if [ $TOTAL_CHECKS -gt 0 ]; then
-        SUCCESS_RATE=$((PASSED_CHECKS * 100 / TOTAL_CHECKS))
-
-        echo -e "${BOLD}Taxa de sucesso:${NC} ${SUCCESS_RATE}%"
+        echo ""
+        echo -e "${BOLD}Total de verificações:${NC} $TOTAL_CHECKS"
+        echo -e "${GREEN}✓ Passou:${NC} $PASSED_CHECKS"
+        echo -e "${RED}✗ Falhou:${NC} $FAILED_CHECKS"
+        echo -e "${YELLOW}⚠ Avisos:${NC} $WARNING_CHECKS"
         echo ""
 
-        if [ $SUCCESS_RATE -ge 90 ]; then
-            echo -e "${GREEN}${BOLD}🎉 EXCELENTE! O projeto está em ótimo estado!${NC}"
-        elif [ $SUCCESS_RATE -ge 70 ]; then
-            echo -e "${YELLOW}${BOLD}👍 BOM! Alguns ajustes recomendados.${NC}"
-        elif [ $SUCCESS_RATE -ge 50 ]; then
-            echo -e "${YELLOW}${BOLD}⚠️  ATENÇÃO! Várias melhorias necessárias.${NC}"
-        else
-            echo -e "${RED}${BOLD}❌ CRÍTICO! Muitos problemas encontrados.${NC}"
+        # Calcular percentual de sucesso
+        if [ $TOTAL_CHECKS -gt 0 ]; then
+            SUCCESS_RATE=$((PASSED_CHECKS * 100 / TOTAL_CHECKS))
+
+            echo -e "${BOLD}Taxa de sucesso:${NC} ${SUCCESS_RATE}%"
+            echo ""
+
+            if [ $SUCCESS_RATE -ge 90 ]; then
+                echo -e "${GREEN}${BOLD}🎉 EXCELENTE! O projeto está em ótimo estado!${NC}"
+            elif [ $SUCCESS_RATE -ge 70 ]; then
+                echo -e "${YELLOW}${BOLD}👍 BOM! Alguns ajustes recomendados.${NC}"
+            elif [ $SUCCESS_RATE -ge 50 ]; then
+                echo -e "${YELLOW}${BOLD}⚠️  ATENÇÃO! Várias melhorias necessárias.${NC}"
+            else
+                echo -e "${RED}${BOLD}❌ CRÍTICO! Muitos problemas encontrados.${NC}"
+            fi
+        fi
+
+        # Listar erros críticos se houver
+        if [ "${#ERRORS[@]}" -gt 0 ] 2>/dev/null; then
+            echo ""
+            echo -e "${RED}${BOLD}Erros Críticos:${NC}"
+            for error in "${ERRORS[@]+"${ERRORS[@]}"}"; do
+                echo -e "  ${RED}✗${NC} $error"
+            done
+        fi
+
+        # Listar avisos importantes se houver
+        if [ "${#WARNINGS[@]}" -gt 0 ] 2>/dev/null; then
+            echo ""
+            echo -e "${YELLOW}${BOLD}Avisos Importantes:${NC}"
+            for warning in "${WARNINGS[@]+"${WARNINGS[@]}"}"; do
+                echo -e "  ${YELLOW}⚠${NC} $warning"
+            done
         fi
     fi
 
-    # Listar erros críticos se houver
-    if [ ${#ERRORS[@]} -gt 0 ]; then
-        echo ""
-        echo -e "${RED}${BOLD}Erros Críticos:${NC}"
-        for error in "${ERRORS[@]}"; do
-            echo -e "  ${RED}✗${NC} $error"
-        done
-    fi
+    # Output JSON se solicitado
+    if [ "$JSON_OUTPUT" = true ]; then
+        generate_json_output
+    else
+        local end_time=$(date +%s)
+        local duration=$((end_time - START_TIME))
 
-    # Listar avisos importantes se houver
-    if [ ${#WARNINGS[@]} -gt 0 ]; then
         echo ""
-        echo -e "${YELLOW}${BOLD}Avisos Importantes:${NC}"
-        for warning in "${WARNINGS[@]}"; do
-            echo -e "  ${YELLOW}⚠${NC} $warning"
-        done
+        echo -e "${BLUE}${BOLD}=================================================${NC}"
+        echo -e "${BLUE}${BOLD}  Validação concluída!${NC}"
+        echo -e "${BLUE}${BOLD}  Duração: ${duration}s${NC}"
+        echo -e "${BLUE}${BOLD}  Término: $(timestamp)${NC}"
+        echo -e "${BLUE}${BOLD}=================================================${NC}"
+        echo ""
     fi
-
-    echo ""
-    echo -e "${BLUE}${BOLD}=================================================${NC}"
-    echo -e "${BLUE}${BOLD}  Validação concluída!${NC}"
-    echo -e "${BLUE}${BOLD}=================================================${NC}"
-    echo ""
 
     # Exit code baseado no resultado
-    if [ $FAILED_CHECKS -gt 0 ]; then
-        exit 1
+    if [ $CRITICAL_ERRORS -gt 0 ]; then
+        exit 2  # Erro crítico
+    elif [ $FAILED_CHECKS -gt 0 ]; then
+        exit 1  # Erro normal
     else
-        exit 0
+        exit 0  # Sucesso
     fi
 }
 
 # Executar validação
-main
+main "$@"
