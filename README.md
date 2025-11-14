@@ -19,6 +19,26 @@ Transformamos o sistema de documentação em uma **experiência de chat moderna 
 
 **[▶️ ACESSE AGORA: Abra `index.html` e digite a senha `9091`](./index.html)**
 
+## 🔍 Validação do Projeto
+
+Execute a validação completa do projeto com um único comando:
+
+```bash
+./validate.sh
+```
+
+Este script realiza **76+ verificações** em 10 categorias:
+- ✅ Estrutura de arquivos e dependências
+- ✅ Sintaxe (JavaScript, JSON, HTML)
+- ✅ Configuração e segurança
+- ✅ PWA (Progressive Web App)
+- ✅ Acessibilidade e performance
+- ✅ Funcionalidades do sistema
+
+**Taxa de sucesso atual**: 94% 🎉
+
+Veja [VALIDATION.md](./VALIDATION.md) para documentação completa.
+
 ## 🏗️ Estrutura do Projeto
 
 ```
