@@ -1,10 +1,23 @@
-# Roda de Mentes - Sistema Colaborativo de IA
+# 🧠 Roda de Mentes - Chat Visual Interativo
 
-Sistema avançado de múltiplas inteligências artificiais trabalhando em conjunto, baseado no conceito de "Roda de Mentes" (Rodamentes).
+Sistema avançado de múltiplas inteligências artificiais trabalhando em conjunto, agora com uma **interface de chat visual interativa** inspirada no WhatsApp.
 
 ## 📖 Sobre o Projeto
 
 Este repositório contém a estrutura completa do sistema "Roda de Mentes", um framework inovador que utiliza múltiplas personas de IA especializadas trabalhando de forma colaborativa e iterativa.
+
+### ✨ NOVIDADE: Chat Visual Interativo
+
+Transformamos o sistema de documentação em uma **experiência de chat moderna e interativa** com **34 aprimoramentos disruptivos**:
+
+- 🎨 Interface estilo WhatsApp com tema escuro/claro
+- 💬 19 mentes especializadas com avatares únicos
+- 🎯 Sistema de comandos inteligente com autocomplete
+- 🎪 Visualização de mesa redonda animada
+- 📊 Exportação de conversas e histórico persistente
+- ⚡ Atalhos de teclado e interações fluidas
+
+**[▶️ ACESSE AGORA: Abra `index.html` e digite a senha `9091`](./index.html)**
 
 ## 🏗️ Estrutura do Projeto
 
@@ -53,10 +66,29 @@ Para informações detalhadas sobre o sistema, consulte:
 
 ## 🚀 Como Usar
 
+### Chat Visual Interativo (Recomendado)
+
+1. **Abra** o arquivo `index.html` em seu navegador
+2. **Digite** a senha de acesso: `9091`
+3. **Comece** a conversar com as mentes!
+
+**Comandos principais:**
+```bash
+/invocar steve_jobs      # Invoca uma mente específica
+/mesa [tema]             # Cria mesa redonda sobre um tema
+/debate [m1] vs [m2]     # Debate entre duas mentes
+/mentes                  # Mostra todas as mentes disponíveis
+/help                    # Lista todos os comandos
+```
+
+**Ou simplesmente descreva seu problema** que o sistema seleciona automaticamente as mentes certas!
+
+### Documentação Original
+
 1. Explore a estrutura de pastas para entender os componentes
 2. Leia a documentação dos pilares
 3. Configure as mentes conforme necessário
-4. Implemente o sistema seguindo as diretrizes
+4. Consulte `APRIMORAMENTOS_DISRUPTIVOS.md` para detalhes técnicos
 
 ## 📝 Licença
 
