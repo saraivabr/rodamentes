@@ -1,0 +1,11 @@
+# Checklist de Auditoria (Semanal)
+- [ ] **Primeira Linha** publicada/visível (bio, topo do perfil).
+- [ ] **Dissecação Neural** revisada com exemplos específicos e linguagem do cliente.
+- [ ] **Calendário T.A.D.** respeitado (50/25/25).
+- [ ] **Provas** novas na semana (prints, casos, bastidores reais).
+- [ ] **Página de Oferta** ≤800 palavras, com números e garantia.
+- [ ] **CTA único** e claro em posts e stories.
+- [ ] **Script de Qualificação** ativo (3 perguntas objetivas).
+- [ ] **Agenda** com blocos de calls reservados (8/semana).
+- [ ] **Upsell** definido para perfis premium (limite de vagas).
+- [ ] **KPIs** atualizados e analisados (decisão baseada em dados).

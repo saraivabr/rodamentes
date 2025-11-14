@@ -1,0 +1,11 @@
+﻿Métrica,Definição,Meta,Fonte,Frequência
+Leads Qualificados/semana,Quantidade de conversas que atendem critérios de ICP,≥ 15,DM/Forms,Semanal
+Taxa de Resposta Stories,% replies por visualizações (últimos 7 dias),≥ 3%,Instagram Insights,Semanal
+% Conteúdo Tensão,Proporção de posts de Tensão vs total,≈ 50%,Calendário Conteúdo,Semanal
+CTR CTA Stories,Cliques no link ou resposta ao CTA,≥ 5%,Instagram Insights,Semanal
+Calls Agendadas/semana,Diagnósticos marcados,≥ 8,Agenda/CRM,Semanal
+Taxa de Fechamento,% propostas aceitas,≥ 30%,CRM,Semanal
+Ticket Médio,Valor médio por venda,Crescimento 20% em 30d,Financeiro,Mensal
+LTV 90 dias,Receita por cliente em 90 dias,≥ 1.8x ticket,Financeiro,Mensal
+CAC,Custo de aquisição por cliente,≤ 20% do ticket,Ads/Tempo,Mensal
+Tempo p/ Primeiro Resultado,Dias até marco de valor percebido,≤ 14 dias,Delivery,Mensal

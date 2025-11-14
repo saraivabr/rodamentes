@@ -1,0 +1,84 @@
+📁 LISTA DE ARQUIVOS PARA UPLOAD NO GPT PERSONALIZADO
+═══════════════════════════════════════════════════════
+
+Upload ESTES 10 arquivos na seção "Knowledge" do seu GPT:
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ARQUIVOS CORE (3 arquivos)                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+1. ✅ GPT_CONFIG/KNOWLEDGE_BASE_PRINCIPAL.md
+   → Instruções centrais, mapeamentos, estruturas
+
+2. ✅ Core/DOUG_FACILITATOR.md
+   → Doug como maestro da Roda
+
+3. ✅ Core/MINDS_SELECTOR.md
+   → Sistema de seleção inteligente
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│ PERFIS DAS MENTES (6 arquivos - Mentes implementadas)          │
+└─────────────────────────────────────────────────────────────────┘
+
+4. ✅ Mentes/Negocios/steve_jobs.md
+   → Simplicidade brutal, design, posicionamento
+
+5. ✅ Mentes/Negocios/peter_thiel.md
+   → Monopólios, pensamento contrário, zero to one
+
+6. ✅ Mentes/Psicologia/viktor_frankl.md
+   → Sentido de vida, logoterapia, propósito
+
+7. ✅ Mentes/Filosofia/marcus_aurelius.md
+   → Estoicismo, adversidade, controle emocional
+
+8. ✅ Mentes/Criatividade/leonardo_davinci.md
+   → Curiosidade, conexões interdisciplinares
+
+9. ✅ Mentes/Ciencia/richard_feynman.md
+   → Primeira princípios, simplicidade, clareza
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│ DOCUMENTAÇÃO (1 arquivo)                                         │
+└─────────────────────────────────────────────────────────────────┘
+
+10. ✅ README_RODA_DE_MENTES.md
+    → Manual completo do sistema
+
+
+═══════════════════════════════════════════════════════════════════
+
+TOTAL: 10 ARQUIVOS
+
+═══════════════════════════════════════════════════════════════════
+
+
+📝 COMO FAZER UPLOAD:
+
+1. Abra ChatGPT → "Explore GPTs" → "Create a GPT"
+2. Vá para aba "Configure"
+3. Role até seção "Knowledge"
+4. Clique em "Upload files"
+5. Selecione TODOS os 10 arquivos acima
+6. Aguarde upload completar
+7. Verifique que todos apareceram na lista
+
+
+⚠️ IMPORTANTE:
+
+- Upload na ORDEM listada acima (opcional mas recomendado)
+- KNOWLEDGE_BASE_PRINCIPAL.md DEVE ser o primeiro
+- Não pule nenhum arquivo
+- Se algum arquivo der erro, tente re-upload individual
+
+
+═══════════════════════════════════════════════════════════════════
+
+CAMINHO COMPLETO DOS ARQUIVOS:
+/Users/saraiva/Downloads/Doug_System_Structured_PLUS 2/
+
+Use este caminho como base para localizar cada arquivo.
+
+═══════════════════════════════════════════════════════════════════

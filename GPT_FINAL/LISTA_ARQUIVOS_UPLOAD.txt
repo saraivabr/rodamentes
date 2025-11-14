@@ -1,0 +1,106 @@
+═══════════════════════════════════════════════════════════
+📁 LISTA DE 10 ARQUIVOS PARA UPLOAD NO GPT
+═══════════════════════════════════════════════════════════
+
+Faça upload DESTES arquivos na seção "Knowledge" do seu GPT:
+
+┌─────────────────────────────────────────────────────────┐
+│ CORE (2 arquivos)                                        │
+└─────────────────────────────────────────────────────────┘
+
+1. ✅ Core/MINDS_COUNCIL_ENGINE.md
+   → Sistema principal SEM Doug
+
+2. ✅ Core/MINDS_SELECTOR.md
+   → Seleção inteligente de mentes
+
+
+┌─────────────────────────────────────────────────────────┐
+│ MENTES COMPLETAS (8 arquivos)                           │
+└─────────────────────────────────────────────────────────┘
+
+3. ✅ Mentes/Bilionarios_Brasileiros/flavio_augusto.md
+   → Franchising, Exit, R$ 1 bilhão (Wise Up)
+
+4. ✅ Mentes/Tech_Visionarios/elon_musk.md
+   → Primeira Princípios, Escala 10X, US$ 230+ bi
+
+5. ✅ Mentes/Negocios/steve_jobs.md
+   → Simplicidade brutal, Design, Perfeição
+
+6. ✅ Mentes/Negocios/peter_thiel.md
+   → Monopólio, Zero to One, Pensamento contrário
+
+7. ✅ Mentes/Psicologia/viktor_frankl.md
+   → Sentido de vida, Logoterapia, Propósito
+
+8. ✅ Mentes/Filosofia/marcus_aurelius.md
+   → Estoicismo, Adversidade, Controle emocional
+
+9. ✅ Mentes/Criatividade/leonardo_davinci.md
+   → Curiosidade, Conexões interdisciplinares
+
+10. ✅ Mentes/Ciencia/richard_feynman.md
+    → Primeira princípios científicos, Clareza
+
+
+═══════════════════════════════════════════════════════════
+TOTAL: 10 ARQUIVOS
+═══════════════════════════════════════════════════════════
+
+
+📍 CAMINHO COMPLETO:
+/Users/saraiva/Downloads/Doug_System_Structured_PLUS 2/
+
+Use este caminho base para localizar cada arquivo.
+
+
+═══════════════════════════════════════════════════════════
+💡 COMO FAZER UPLOAD:
+═══════════════════════════════════════════════════════════
+
+1. No GPT, aba "Configure"
+2. Role até seção "Knowledge"
+3. Clique "Upload files"
+4. Selecione os 10 arquivos acima
+5. Aguarde upload completar
+6. Confirme que todos aparecem na lista
+
+
+═══════════════════════════════════════════════════════════
+⚠️ IMPORTANTE:
+═══════════════════════════════════════════════════════════
+
+- MINDS_COUNCIL_ENGINE.md é o mais importante (sistema core)
+- Não pule nenhum arquivo
+- Se algum der erro, tente re-upload individual
+- Ordem não importa, mas recomendo seguir numeração
+
+
+═══════════════════════════════════════════════════════════
+✅ APÓS UPLOAD:
+═══════════════════════════════════════════════════════════
+
+Você terá um GPT com:
+- 8 mentes completas e funcionais
+- Flávio Augusto (franchising, exit)
+- Elon Musk (primeira princípios, 10X)
+- Steve Jobs (simplicidade, design)
+- Peter Thiel (monopólio)
+- Viktor Frankl (propósito)
+- Marcus Aurelius (estoicismo)
+- Leonardo da Vinci (criatividade)
+- Richard Feynman (clareza)
+
+
+═══════════════════════════════════════════════════════════
+🚀 PRÓXIMO PASSO:
+═══════════════════════════════════════════════════════════
+
+Depois de fazer upload, vá para:
+GPT_FINAL/GUIA_CRIACAO_5_MINUTOS.md
+
+E siga o passo a passo completo.
+
+
+═══════════════════════════════════════════════════════════
